@@ -6,6 +6,7 @@ WIDTH, HEIGHT = 480, 640
 FPS = 60
 HIT_Y = HEIGHT - 80
 HIT_WINDOW = 30
+MAX_MISSES = 15
 BG = (15, 10, 25)
 LANE_W = WIDTH // LANES
 
@@ -76,7 +77,12 @@ class GameEngine:
             self.score += pts * max(1, self.combo // 5)
             self.feedback.append([grade, col, 40, lane_x, HIT_Y - 30])
         else:
+            # Empty/invalid tap: counts as exactly one miss.
             self.combo = 0
+            self.misses += 1
+            if self.misses >= MAX_MISSES:
+                # End the run now so further taps this frame can't over-count.
+                self.game_over = True
             self.feedback.append(["MISS", (220,60,60), 40, lane_x, HIT_Y - 30])
 
     def update(self):
@@ -86,21 +92,25 @@ class GameEngine:
         if self.spawn_timer >= self.spawn_interval:
             self.spawn_note()
             self.spawn_timer = 0
-            if self.frame % 600 == 0:
-                self.speed = min(10, self.speed + 0.5)
-                self.spawn_interval = max(25, self.spawn_interval - 2)
+
+        # Difficulty ramp: every 600 frames (10 s), regardless of spawn timing.
+        if self.frame % 600 == 0:
+            self.speed = min(10, self.speed + 0.5)
+            self.spawn_interval = max(25, self.spawn_interval - 2)
 
         for note in self.notes:
             note.update()
-            if not note.hit and not note.missed and note.y > HIT_Y + HIT_WINDOW + Note.HEIGHT:
+            # Same measure process_tap uses: once the note's centre is more than
+            # HIT_WINDOW below the hit line it can no longer be hit, so it is a miss.
+            if not note.hit and not note.missed and note.y + Note.HEIGHT//2 - HIT_Y > HIT_WINDOW:
                 note.missed = True
                 self.misses += 1
                 self.combo = 0
 
-        self.notes = [n for n in self.notes if not (n.hit or n.missed and n.y > HEIGHT + 10)]
+        self.notes = [n for n in self.notes if not (n.hit or n.missed)]
         self.feedback = [[t,c,ttl-1,x,y] for t,c,ttl,x,y in self.feedback if ttl > 1]
 
-        if self.misses >= 15:
+        if self.misses >= MAX_MISSES:
             self.game_over = True
 
     def draw(self):
@@ -135,10 +145,10 @@ class GameEngine:
         # HUD
         sc = self.font.render(f"Score: {self.score}", True, (220,220,220))
         co = self.font.render(f"Combo: {self.combo}x", True, (255,220,80))
-        mi = self.font.render(f"Misses: {self.misses}/15", True, (220,100,100))
+        mi = self.font.render(f"Misses: {self.misses}/{MAX_MISSES}", True, (220,100,100))
         self.screen.blit(sc, (10, 10))
         self.screen.blit(co, (10, 40))
-        self.screen.blit(mi, (WIDTH - 170, 10))
+        self.screen.blit(mi, (WIDTH - mi.get_width() - 10, 10))
 
         if self.game_over:
             ov = pygame.Surface((WIDTH,HEIGHT), pygame.SRCALPHA)
