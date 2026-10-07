@@ -47,6 +47,7 @@ class GameEngine:
         self.combo = 0
         self.max_combo = 0
         self.misses = 0
+        self.grade_counts = {"PERFECT": 0, "GREAT": 0, "OK": 0}  # successful hits per grade
         self.beat = 0  # beats of BPM elapsed so far
         self.speed = 5
         self.frame = 0
@@ -125,6 +126,7 @@ class GameEngine:
 
     def award_hit(self, grade, pts, col, lane_x):
         # Credit for one successful note: a tap, or a hold that was completed.
+        self.grade_counts[grade] += 1
         self.combo += 1
         self.max_combo = max(self.max_combo, self.combo)
         self.score += pts * max(1, self.combo // 5)
@@ -139,6 +141,12 @@ class GameEngine:
             # End the run now so further key events this frame can't over-count.
             self.game_over = True
         self.feedback.append(["MISS", (220,60,60), 40, lane_x, HIT_Y - 30])
+
+    def accuracy(self):
+        # Successful hits as a percentage of all attempts (hits + misses).
+        hits = sum(self.grade_counts.values())
+        attempts = hits + self.misses
+        return 100 * hits / attempts if attempts else 0.0
 
     def update(self):
         if self.game_over: return
@@ -232,11 +240,28 @@ class GameEngine:
             ov.fill((0,0,0,160))
             self.screen.blit(ov,(0,0))
             msg = self.big_font.render("GAME OVER", True, (220,60,60))
-            sc_msg = self.font.render(f"Final Score: {self.score}  Max Combo: {self.max_combo}x", True, (200,200,200))
-            restart = self.font.render("Press R to Restart", True, (160,160,160))
-            self.screen.blit(msg, (WIDTH//2-msg.get_width()//2, HEIGHT//2-70))
-            self.screen.blit(sc_msg, (WIDTH//2-sc_msg.get_width()//2, HEIGHT//2))
-            self.screen.blit(restart, (WIDTH//2-restart.get_width()//2, HEIGHT//2+50))
+            self.screen.blit(msg, (WIDTH//2-msg.get_width()//2, 110))
+            lines = [
+                (185, f"Final Score: {self.score}", (200,200,200)),
+                (215, f"Max Combo: {self.max_combo}x", (200,200,200)),
+                (415, f"Accuracy: {self.accuracy():.1f}%", (220,220,220)),
+                (475, "Press R to Restart", (160,160,160)),
+            ]
+            for y, text, color in lines:
+                line = self.font.render(text, True, color)
+                self.screen.blit(line, (WIDTH//2-line.get_width()//2, y))
+            # Grade summary: label on the left, count right-aligned, one row per grade.
+            grades = [
+                ("PERFECT", self.grade_counts["PERFECT"], (255,220,0)),
+                ("GREAT", self.grade_counts["GREAT"], (100,220,100)),
+                ("OK", self.grade_counts["OK"], (180,180,255)),
+                ("MISS", self.misses, (220,60,60)),
+            ]
+            for i, (label, count, color) in enumerate(grades):
+                name = self.font.render(label, True, color)
+                num = self.font.render(str(count), True, color)
+                self.screen.blit(name, (WIDTH//2-100, 270 + i*30))
+                self.screen.blit(num, (WIDTH//2+100-num.get_width(), 270 + i*30))
         pygame.display.flip()
 
     def run(self):
