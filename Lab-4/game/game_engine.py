@@ -1,3 +1,5 @@
+import math
+from array import array
 import pygame
 import random
 from game.beat import Note, LANES, LANE_KEYS, LANE_LABELS, LANE_COLORS
@@ -10,10 +12,24 @@ MAX_MISSES = 15
 BG = (15, 10, 25)
 LANE_W = WIDTH // LANES
 
+def make_hit_sound():
+    # Short 880 Hz beep built in memory, so no audio file is needed.
+    # Samples are signed 16-bit (pygame's default mixer format) and are written
+    # for whatever sample rate / channel count the mixer actually opened with.
+    rate, _, channels = pygame.mixer.get_init()
+    length = int(rate * 0.08)  # 80 ms
+    samples = array("h")
+    for i in range(length):
+        fade = 1 - i / length  # fade out so the beep doesn't end with a click
+        value = int(32767 * 0.4 * fade * math.sin(2 * math.pi * 880 * i / rate))
+        samples.extend([value] * channels)
+    return pygame.mixer.Sound(buffer=samples)
+
 class GameEngine:
     def __init__(self):
         pygame.init()
         pygame.mixer.init()
+        self.hit_sound = make_hit_sound()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("Rhythm Tap")
         self.clock = pygame.time.Clock()
@@ -76,6 +92,7 @@ class GameEngine:
             self.max_combo = max(self.max_combo, self.combo)
             self.score += pts * max(1, self.combo // 5)
             self.feedback.append([grade, col, 40, lane_x, HIT_Y - 30])
+            self.hit_sound.play()  # successful hits only (PERFECT / GREAT / OK)
         else:
             # Empty/invalid tap: counts as exactly one miss.
             self.combo = 0
