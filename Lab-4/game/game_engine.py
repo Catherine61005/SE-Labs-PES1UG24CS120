@@ -94,6 +94,7 @@ class GameEngine:
             self.spawn_timer = 0
 
         # Difficulty ramp: every 600 frames (10 s), regardless of spawn timing.
+
         if self.frame % 600 == 0:
             self.speed = min(10, self.speed + 0.5)
             self.spawn_interval = max(25, self.spawn_interval - 2)
@@ -148,7 +149,7 @@ class GameEngine:
         mi = self.font.render(f"Misses: {self.misses}/{MAX_MISSES}", True, (220,100,100))
         self.screen.blit(sc, (10, 10))
         self.screen.blit(co, (10, 40))
-        self.screen.blit(mi, (10, 70))
+        self.screen.blit(mi, (WIDTH - mi.get_width() - 10, 10))
 
         if self.game_over:
             ov = pygame.Surface((WIDTH,HEIGHT), pygame.SRCALPHA)
