@@ -9,6 +9,7 @@ FPS = 60
 HIT_Y = HEIGHT - 80
 HIT_WINDOW = 30
 MAX_MISSES = 15
+BPM = 120              # tempo: one note spawns on every beat
 HOLD_FRAMES = FPS      # a hold note must be held for 1 second
 HOLD_CHANCE = 0.2      # share of spawned notes that are hold notes
 HOLD_GAP = 45          # extra frames a lane stays clear after a hold note's body
@@ -46,8 +47,7 @@ class GameEngine:
         self.combo = 0
         self.max_combo = 0
         self.misses = 0
-        self.spawn_timer = 0
-        self.spawn_interval = 45
+        self.beat = 0  # beats of BPM elapsed so far
         self.speed = 5
         self.frame = 0
         self.feedback = []  # (text, color, ttl, x, y)
@@ -143,17 +143,19 @@ class GameEngine:
     def update(self):
         if self.game_over: return
         self.frame += 1
-        self.spawn_timer += 1
-        if self.spawn_timer >= self.spawn_interval:
+        # BPM-synced spawning: one note on every beat. The beat count is derived
+        # straight from the frame count (a minute is FPS * 60 frames), so beats
+        # never drift, even when a beat is not a whole number of frames.
+        beat = self.frame * BPM // (FPS * 60)
+        if beat > self.beat:
+            self.beat = beat
             self.spawn_note()
-            self.spawn_timer = 0
         self.lane_block = [max(0, b - 1) for b in self.lane_block]
 
         # Difficulty ramp: every 600 frames (10 s), regardless of spawn timing.
 
         if self.frame % 600 == 0:
             self.speed = min(10, self.speed + 0.5)
-            self.spawn_interval = max(25, self.spawn_interval - 2)
 
         for note in self.notes:
             note.update()
