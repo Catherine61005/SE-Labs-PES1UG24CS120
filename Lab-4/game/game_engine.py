@@ -148,7 +148,7 @@ class GameEngine:
         mi = self.font.render(f"Misses: {self.misses}/{MAX_MISSES}", True, (220,100,100))
         self.screen.blit(sc, (10, 10))
         self.screen.blit(co, (10, 40))
-        self.screen.blit(mi, (WIDTH - mi.get_width() - 10, 10))
+        self.screen.blit(mi, (WIDTH - mi.get_width() - 20, 10))
 
         if self.game_over:
             ov = pygame.Surface((WIDTH,HEIGHT), pygame.SRCALPHA)
