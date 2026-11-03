@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="280" viewBox="0 0 1120 280">
+<rect width="1120" height="280" rx="16" fill="#171b22"/><circle cx="28" cy="27" r="7" fill="#ef6a65"/><circle cx="51" cy="27" r="7" fill="#e7bf5b"/><circle cx="74" cy="27" r="7" fill="#68bd83"/>
+<text x="100" y="33" font-family="monospace" font-size="18" font-weight="bold" fill="#f0f2f5">Lab 6 | Branch Coverage Test Run</text>
+<text x="30" y="76" font-family="monospace" font-size="15" fill="#9dd69e">$ coverage run --branch --source=income_tax -m pytest -v test_branch_coverage.py</text>
+<text x="30" y="100" font-family="monospace" font-size="15" fill="#e4e8ee">collected 20 items</text>
+<text x="30" y="124" font-family="monospace" font-size="15" fill="#e4e8ee">20 passed</text>
+<text x="30" y="148" font-family="monospace" font-size="15" fill="#9dd69e">$ coverage report -m</text>
+<text x="30" y="172" font-family="monospace" font-size="15" fill="#e4e8ee">Name            Stmts   Miss  Branch BrPart  Cover</text>
+<text x="30" y="196" font-family="monospace" font-size="15" fill="#e4e8ee">income_tax.py      39      0     28      0   100%</text>
+<text x="30" y="220" font-family="monospace" font-size="15" fill="#e4e8ee">TOTAL              39      0     28      0   100%</text></svg>
