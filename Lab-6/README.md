@@ -1,27 +1,28 @@
 # Lab 6: Code and Branch Coverage Analysis
 
-**Assigned application:** L6_L7_57_income_tax  
-**Module under test:** income_tax.py
+**Assigned application:** `L6_L7_57_income_tax`  
+**Module under test:** `income_tax.py`
 
-## Contents
-- income_tax.py: original assigned application, unchanged.
-- test_code_coverage.py: statement/code coverage tests.
-- test_branch_coverage.py: tests exercising both outcomes of each decision.
-- coverage_code.txt and coverage_branch.txt: command output and coverage reports.
-- screenshots/: SVG terminal-style evidence summaries.
+## Files
+- `income_tax.py`: original assigned application, unchanged.
+- `test_income_tax.py`: original starter tests from the assigned repository.
+- `CodeCoverageTest_57_income_tax.py`: additional code coverage test cases.
+- `BranchCoverageTest_57_income_tax.py`: additional branch coverage test cases.
+- `coverage_code.txt` and `coverage_branch.txt`: recorded test and coverage output.
+- `screenshots/`: terminal-style coverage evidence.
 
-## Run code coverage
+## Code coverage
 ```bash
 coverage erase
-coverage run --source=income_tax -m pytest -v test_code_coverage.py
+coverage run --source=income_tax -m pytest -v CodeCoverageTest_57_income_tax.py
 coverage report -m
 ```
 
-## Run branch coverage
+## Branch coverage
 ```bash
 coverage erase
-coverage run --branch --source=income_tax -m pytest -v test_branch_coverage.py
+coverage run --branch --source=income_tax -m pytest -v BranchCoverageTest_57_income_tax.py
 coverage report -m
 ```
 
-Coverage is measured for income_tax.py, not the test files. Both runs passed all tests and reported 100% coverage.
+The original application was not modified. Coverage was measured only for `income_tax.py`. Both suites passed, with 100% code coverage and 100% branch coverage (28/28 branches).

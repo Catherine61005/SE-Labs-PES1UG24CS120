@@ -1,4 +1,4 @@
-"""Branch coverage tests for every decision in income_tax.py."""
+"""Branch coverage test cases for 57_income_tax (Lab 6)."""
 import pytest
 from income_tax import taxable_income, tax_due, refund_status
 

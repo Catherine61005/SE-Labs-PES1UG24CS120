@@ -1,4 +1,4 @@
-"""Statement/code coverage tests for the assigned income-tax module."""
+"""Code coverage test cases for 57_income_tax (Lab 6)."""
 import pytest
 from income_tax import taxable_income, tax_due, refund_status
 
