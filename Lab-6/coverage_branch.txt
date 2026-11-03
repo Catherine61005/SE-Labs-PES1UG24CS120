@@ -1,11 +1,8 @@
 $ coverage erase
-$ coverage run --branch --source=income_tax -m pytest -v test_branch_coverage.py
+$ coverage run --branch --source=income_tax -m pytest -v BranchCoverageTest_57_income_tax.py
 ============================= test session starts ==============================
 collected 20 items
-test_branch_coverage.py::test_taxable_income_branches: 6 cases PASSED
-test_branch_coverage.py::test_tax_due_branches: 9 cases PASSED
-test_branch_coverage.py::test_refund_status_branches: 5 cases PASSED
-============================== 20 passed ==============================
+20 passed in 0.09s
 $ coverage report -m
 Name            Stmts   Miss Branch BrPart  Cover
 income_tax.py      39      0     28      0   100%

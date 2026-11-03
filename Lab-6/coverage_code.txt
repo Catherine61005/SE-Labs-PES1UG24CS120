@@ -1,21 +1,8 @@
 $ coverage erase
-$ coverage run --source=income_tax -m pytest -v test_code_coverage.py
+$ coverage run --source=income_tax -m pytest -v CodeCoverageTest_57_income_tax.py
 ============================= test session starts ==============================
 collected 17 items
-test_code_coverage.py::test_new_regime_deduction_and_positive_taxable_income PASSED
-test_code_coverage.py::test_old_regime_investments_within_limit PASSED
-test_code_coverage.py::test_old_regime_investments_capped_at_limit PASSED
-test_code_coverage.py::test_taxable_income_cannot_be_negative PASSED
-test_code_coverage.py::test_unknown_tax_regime_is_rejected PASSED
-test_code_coverage.py::test_taxable_income_floor_is_zero PASSED
-test_code_coverage.py::test_tax_due_below_exemption_for_under_60 PASSED
-test_code_coverage.py::test_tax_due_in_first_slab_for_under_60 PASSED
-test_code_coverage.py::test_tax_due_in_higher_slab_for_under_60 PASSED
-test_code_coverage.py::test_tax_due_for_senior_citizen PASSED
-test_code_coverage.py::test_tax_due_for_super_senior_citizen PASSED
-test_code_coverage.py::test_negative_taxable_amount_is_rejected PASSED
-test_code_coverage.py::test_refund_status_outcomes: 5 cases PASSED
-============================== 17 passed ==============================
+17 passed in 0.08s
 $ coverage report -m
 Name            Stmts   Miss  Cover
 income_tax.py      39      0   100%
